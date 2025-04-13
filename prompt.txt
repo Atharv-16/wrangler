@@ -1,0 +1,55 @@
+# Wrangler Enhancement Requirements
+
+## 1. Byte Size and Time Duration Parsers
+
+### Requirements:
+1. Add support for parsing byte sizes with units (B, KB, MB, GB, TB)
+2. Add support for parsing time durations with units (ms, s, m, h, d)
+3. Implement proper error handling for invalid formats
+4. Add comprehensive tests
+5. Update documentation
+
+### Implementation Details:
+- Created ByteSize and TimeDuration classes in wrangler-api
+- Added new token types to TokenType enum
+- Added lexer rules for BYTE_SIZE and TIME_DURATION tokens
+- Implemented parsing logic with proper error handling
+- Added unit tests covering various formats and error cases
+- Updated README with documentation and examples
+
+## 2. Aggregate Stats Directive
+
+### Requirements:
+1. Create a new directive for aggregating byte sizes and time durations
+2. Support summing byte sizes from one column
+3. Support summing time durations from another column
+4. Allow converting results to specified units
+5. Add comprehensive tests
+6. Update documentation
+
+### Implementation Details:
+- Created AggregateStats directive class
+- Implemented execute method for processing records
+- Added support for custom units (default: MB for size, s for time)
+- Added comprehensive tests covering:
+  - Basic aggregation
+  - Custom units
+  - Mixed units
+  - Error cases
+- Updated README with usage examples and parameter documentation
+
+### Example Usage:
+```
+# Basic aggregation with default units
+aggregate-stats :data_transfer_size :response_time total_size_mb total_time_sec
+
+# Aggregation with custom units
+aggregate-stats :data_transfer_size :response_time total_size_gb total_time_min 'GB' 'm'
+```
+
+## Technical Constraints:
+- Use Java 8 features (avoid newer features like switch expressions)
+- Follow project's patterns and conventions
+- Include proper error handling
+- Add comprehensive test coverage
+- Update documentation 

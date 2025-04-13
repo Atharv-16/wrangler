@@ -216,3 +216,67 @@ Cask is a trademark of Cask Data, Inc. All rights reserved.
 
 Apache, Apache HBase, and HBase are trademarks of The Apache Software Foundation. Used with
 permission. No endorsement by The Apache Software Foundation is implied by the use of these marks.
+
+## Byte Size and Time Duration Parsers
+
+Wrangler now supports parsing byte sizes and time durations with units. This makes it easier to work with data that represents file sizes, network transfer sizes, or time intervals.
+
+### Byte Size Units
+
+Byte sizes can be specified with the following units:
+- `B` - Bytes
+- `KB` - Kilobytes (1024 bytes)
+- `MB` - Megabytes (1024 * 1024 bytes)
+- `GB` - Gigabytes (1024 * 1024 * 1024 bytes)
+- `TB` - Terabytes (1024 * 1024 * 1024 * 1024 bytes)
+
+Examples:
+- `100B` - 100 bytes
+- `1.5KB` - 1.5 kilobytes
+- `2MB` - 2 megabytes
+- `0.5GB` - 0.5 gigabytes
+
+### Time Duration Units
+
+Time durations can be specified with the following units:
+- `ms` - Milliseconds
+- `s` - Seconds
+- `m` - Minutes
+- `h` - Hours
+- `d` - Days
+
+Examples:
+- `500ms` - 500 milliseconds
+- `1.5s` - 1.5 seconds
+- `2m` - 2 minutes
+- `0.5h` - 0.5 hours
+
+### Aggregate Stats Directive
+
+The `aggregate-stats` directive allows you to aggregate byte sizes and time durations from specified columns. It supports:
+
+1. Summing byte sizes from one column
+2. Summing time durations from another column
+3. Converting the results to specified units
+
+Usage:
+```
+aggregate-stats :size_column :time_column total_size_column total_time_column [size_unit] [time_unit]
+```
+
+Parameters:
+- `size_column` - Source column containing byte sizes
+- `time_column` - Source column containing time durations
+- `total_size_column` - Target column for the total size
+- `total_time_column` - Target column for the total time
+- `size_unit` (optional) - Unit for the total size (default: MB)
+- `time_unit` (optional) - Unit for the total time (default: s)
+
+Example:
+```
+# Aggregate data transfer sizes and response times
+aggregate-stats :data_transfer_size :response_time total_size_mb total_time_sec
+
+# Aggregate with custom units
+aggregate-stats :data_transfer_size :response_time total_size_gb total_time_min 'GB' 'm'
+```

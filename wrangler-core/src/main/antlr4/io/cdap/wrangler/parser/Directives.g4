@@ -140,7 +140,7 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | BYTE_SIZE | TIME_DURATION
  ;
 
 ecommand
@@ -310,4 +310,29 @@ fragment Int
 
 fragment Digit
  : [0-9]
+ ;
+
+// Lexer rules for byte size and time duration
+BYTE_SIZE
+ : Number BYTE_UNIT
+ ;
+
+TIME_DURATION
+ : Number TIME_UNIT
+ ;
+
+fragment BYTE_UNIT
+ : [Kk][Bb]    // Kilobytes
+ | [Mm][Bb]    // Megabytes
+ | [Gg][Bb]    // Gigabytes
+ | [Tt][Bb]    // Terabytes
+ | [Bb]        // Bytes
+ ;
+
+fragment TIME_UNIT
+ : 'ms'        // Milliseconds
+ | 's'         // Seconds
+ | 'm'         // Minutes
+ | 'h'         // Hours
+ | 'd'         // Days
  ;
