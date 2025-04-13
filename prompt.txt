@@ -131,4 +131,9 @@ aggregate-stats :data_transfer_size :response_time total_size_gb total_time_min 
 4. Add proper error handling for all edge cases
 5. Follow project's code style guidelines
 6. Ensure files end with newlines
-7. Test all changes thoroughly before committing 
+7. Test all changes thoroughly before committing
+
+## Exact Prompts Used
+1. "so it will build now?"
+2. "yes the build is succesfull, lets add all the things in prompt.txt, i mean the chat we had and prompts used"
+3. "include the exact prompts i gave you" 
