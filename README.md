@@ -280,3 +280,10 @@ aggregate-stats :data_transfer_size :response_time total_size_mb total_time_sec
 # Aggregate with custom units
 aggregate-stats :data_transfer_size :response_time total_size_gb total_time_min 'GB' 'm'
 ```
+
+Evidence of successful build
+<img width="778" alt="Screenshot 2025-04-13 181321" src="https://github.com/user-attachments/assets/c842dc97-73ab-4da7-945c-4e7f89ff21ba" />
+<img width="1280" alt="Screenshot 2025-04-13 181237" src="https://github.com/user-attachments/assets/5080b106-1a21-4f6a-8d42-1f180a1eace6" />
+
+
+
