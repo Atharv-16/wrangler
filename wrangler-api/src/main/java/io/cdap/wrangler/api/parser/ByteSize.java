@@ -28,7 +28,10 @@ import java.util.regex.Pattern;
  */
 @PublicEvolving
 public class ByteSize implements Token {
-  private static final Pattern BYTE_SIZE_PATTERN = Pattern.compile("^(\\d+(?:\\.\\d+)?)(B|KB|MB|GB|TB)$", Pattern.CASE_INSENSITIVE);
+  private static final Pattern BYTE_SIZE_PATTERN = Pattern.compile(
+    "^(\\d+(?:\\.\\d+)?)(B|KB|MB|GB|TB)$",
+    Pattern.CASE_INSENSITIVE
+  );
   private final String originalValue;
   private final double value;
   private final String unit;
@@ -97,6 +100,14 @@ public class ByteSize implements Token {
     return unit;
   }
 
+  /**
+   * Gets the original value as a string.
+   * @return The original value
+   */
+  public String getOriginalValue() {
+    return originalValue;
+  }
+
   @Override
   public Object value() {
     return originalValue;
@@ -120,4 +131,50 @@ public class ByteSize implements Token {
   public String toString() {
     return originalValue;
   }
-} 
+
+  /**
+   * Converts the byte size to bytes.
+   * @return The size in bytes
+   */
+  private double toBytes() {
+    switch (unit.toUpperCase()) {
+      case "B":
+        return value;
+      case "KB":
+        return value * 1024.0;
+      case "MB":
+        return value * 1024.0 * 1024.0;
+      case "GB":
+        return value * 1024.0 * 1024.0 * 1024.0;
+      case "TB":
+        return value * 1024.0 * 1024.0 * 1024.0 * 1024.0;
+      default:
+        throw new IllegalArgumentException("Invalid unit: " + unit);
+    }
+  }
+
+  /**
+   * Converts the byte size to a different unit.
+   * 
+   * @param targetUnit The target unit to convert to
+   * @return The converted value in the target unit
+   * @throws IllegalArgumentException if the target unit is invalid
+   */
+  public double convertTo(String targetUnit) {
+    double bytes = toBytes();
+    switch (targetUnit.toUpperCase()) {
+      case "B":
+        return bytes;
+      case "KB":
+        return bytes / 1024.0;
+      case "MB":
+        return bytes / (1024.0 * 1024.0);
+      case "GB":
+        return bytes / (1024.0 * 1024.0 * 1024.0);
+      case "TB":
+        return bytes / (1024.0 * 1024.0 * 1024.0 * 1024.0);
+      default:
+        throw new IllegalArgumentException("Invalid target unit: " + targetUnit);
+    }
+  }
+}

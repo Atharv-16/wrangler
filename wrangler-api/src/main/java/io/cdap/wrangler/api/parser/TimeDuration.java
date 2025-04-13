@@ -1,5 +1,5 @@
 /*
- * Copyright © 2024 Cask Data, Inc.
+ * Copyright © 2016-2017 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,108 +16,71 @@
 
 package io.cdap.wrangler.api.parser;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.cdap.wrangler.api.annotations.PublicEvolving;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A token type that represents time durations with units (e.g., "100ms", "2.5s").
+ * Class description here.
  */
 @PublicEvolving
-public class TimeDuration implements Token {
-  private static final Pattern TIME_DURATION_PATTERN = Pattern.compile("^(\\d+(?:\\.\\d+)?)(ms|s|m|h|d)$");
-  private final String originalValue;
-  private final double value;
-  private final String unit;
-  private final long milliseconds;
+public class TimeDuration {
+  private static final Pattern TIME_PATTERN = Pattern.compile("^(\\d+)\\s*(ms|s|m|h|d)$");
+  private final long duration;
+  private final TimeUnit unit;
 
-  public TimeDuration(String value) {
-    this.originalValue = value;
-    Matcher matcher = TIME_DURATION_PATTERN.matcher(value);
-    if (!matcher.matches()) {
-      throw new IllegalArgumentException("Invalid time duration format: " + value);
-    }
-
-    this.value = Double.parseDouble(matcher.group(1));
-    this.unit = matcher.group(2);
-    this.milliseconds = convertToMilliseconds(this.value, this.unit);
+  public TimeDuration(long duration, TimeUnit unit) {
+    this.duration = duration;
+    this.unit = unit;
   }
 
-  private long convertToMilliseconds(double value, String unit) {
-    long multiplier;
-    switch (unit) {
+  public TimeDuration(String timeStr) {
+    Matcher matcher = TIME_PATTERN.matcher(timeStr.trim());
+    if (!matcher.matches()) {
+      throw new IllegalArgumentException(
+        "Invalid time duration format. Expected format: <number><unit> where unit is one of: ms, s, m, h, d");
+    }
+
+    long value = Long.parseLong(matcher.group(1));
+    String unitStr = matcher.group(2);
+
+    switch (unitStr) {
       case "ms":
-        multiplier = 1L;
+        this.unit = TimeUnit.MILLISECONDS;
+        this.duration = value;
         break;
       case "s":
-        multiplier = 1000L;
+        this.unit = TimeUnit.SECONDS;
+        this.duration = value;
         break;
       case "m":
-        multiplier = 60L * 1000L;
+        this.unit = TimeUnit.MINUTES;
+        this.duration = value;
         break;
       case "h":
-        multiplier = 60L * 60L * 1000L;
+        this.unit = TimeUnit.HOURS;
+        this.duration = value;
         break;
       case "d":
-        multiplier = 24L * 60L * 60L * 1000L;
+        this.unit = TimeUnit.DAYS;
+        this.duration = value;
         break;
       default:
-        throw new IllegalArgumentException("Unknown unit: " + unit);
+        throw new IllegalArgumentException("Unknown time unit: " + unitStr);
     }
-    return (long) (value * multiplier);
   }
 
-  /**
-   * Gets the duration in milliseconds.
-   *
-   * @return the duration in milliseconds
-   */
-  public long getMilliseconds() {
-    return milliseconds;
+  public long getDuration() {
+    return duration;
   }
 
-  /**
-   * Gets the original numeric value before conversion.
-   *
-   * @return the original numeric value
-   */
-  public double getValue() {
-    return value;
-  }
-
-  /**
-   * Gets the unit of measurement (ms, s, m, h, d).
-   *
-   * @return the unit of measurement
-   */
-  public String getUnit() {
+  public TimeUnit getUnit() {
     return unit;
   }
 
-  @Override
-  public Object value() {
-    return originalValue;
+  public long toMilliseconds() {
+    return unit.toMillis(duration);
   }
-
-  @Override
-  public TokenType type() {
-    return TokenType.TIME_DURATION;
-  }
-
-  @Override
-  public JsonElement toJson() {
-    JsonObject object = new JsonObject();
-    object.addProperty("type", type().name());
-    object.addProperty("value", originalValue);
-    object.addProperty("milliseconds", milliseconds);
-    return object;
-  }
-
-  @Override
-  public String toString() {
-    return originalValue;
-  }
-} 
+}

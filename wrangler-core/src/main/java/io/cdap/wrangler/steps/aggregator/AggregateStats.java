@@ -108,7 +108,7 @@ public class AggregateStats implements Directive {
 
       if (timeObj != null) {
         try {
-          totalMilliseconds += new TimeDuration(timeObj.toString()).getMilliseconds();
+          totalMilliseconds += new TimeDuration(timeObj.toString()).toMilliseconds();
         } catch (IllegalArgumentException e) {
           throw new DirectiveExecutionException(
             String.format("Invalid time duration format in column '%s': %s", timeColumn, timeObj));
@@ -180,4 +180,4 @@ public class AggregateStats implements Directive {
   public void destroy() {
     // No resources to clean up
   }
-} 
+}

@@ -16,12 +16,12 @@
 
 package io.cdap.wrangler.steps.aggregator;
 
-import io.cdap.wrangler.api.DirectiveExecutionException;
-import io.cdap.wrangler.api.DirectiveParseException;
-import io.cdap.wrangler.api.Row;
 import io.cdap.wrangler.TestingRig;
-import io.cdap.wrangler.api.RecipeException;
+import io.cdap.wrangler.api.DirectiveExecutionException;
 import io.cdap.wrangler.api.DirectiveLoadException;
+import io.cdap.wrangler.api.DirectiveParseException;
+import io.cdap.wrangler.api.RecipeException;
+import io.cdap.wrangler.api.Row;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -140,4 +140,4 @@ public class AggregateStatsTest {
     }
     return row;
   }
-} 
+}
