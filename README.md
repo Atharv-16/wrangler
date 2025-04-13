@@ -175,6 +175,63 @@ rates below are specified as *records/second*.
 | High (167 Directives) |      426      | 127,946,398 |  82,677,845,324 | 106,367.27 |
 | High (167 Directives) |      426      | 511,785,592 | 330,711,381,296 | 105,768.93 |
 
+## Byte Size and Time Duration Parsers
+
+The Wrangler library now includes built-in support for parsing and aggregating byte sizes and time durations. This feature allows you to work with data columns containing values with units like KB, MB, GB (for byte sizes) and ms, s, m, h, d (for time durations).
+
+### Byte Size Units
+- B (Bytes)
+- KB (Kilobytes)
+- MB (Megabytes)
+- GB (Gigabytes)
+- TB (Terabytes)
+
+### Time Duration Units
+- ms (Milliseconds)
+- s (Seconds)
+- m (Minutes)
+- h (Hours)
+- d (Days)
+
+### Using the Aggregate Stats Directive
+
+The `aggregate-stats` directive allows you to aggregate byte sizes and time durations across rows. Here's the syntax:
+
+```
+aggregate-stats :size_column :time_column total_size_column total_time_column [size_unit] [time_unit]
+```
+
+Parameters:
+- `size_column`: Source column containing byte sizes (e.g., "100MB", "1.5GB")
+- `time_column`: Source column containing time durations (e.g., "5s", "1.5h")
+- `total_size_column`: Target column name for the aggregated size
+- `total_time_column`: Target column name for the aggregated time
+- `size_unit` (optional): Output unit for size (B, KB, MB, GB, TB). Defaults to MB.
+- `time_unit` (optional): Output unit for time (ms, s, m, h, d). Defaults to s.
+
+Example:
+```
+# Input data:
+# | size      | time  |
+# |-----------|-------|
+# | 100MB     | 5s    |
+# | 1.5GB     | 2.5m  |
+# | 512KB     | 100ms |
+
+# Directive:
+aggregate-stats :size :time total_size total_time 'GB' 'm'
+
+# Output:
+# | total_size | total_time |
+# |------------|------------|
+# | 1.6        | 3.0       |
+```
+
+The example above:
+1. Converts all sizes to bytes internally
+2. Converts all times to milliseconds internally
+3. Sums the values
+4. Converts the final sums to the requested output units (GB and minutes)
 
 ## Contact
 
